@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Medicita - Login</title>
+</head>
+<body bgcolor="#f0f4f8" text="#2c3e50" link="#2980b9">
+
+<center>
+    <table bgcolor="white" width="420" cellpadding="20" cellspacing="0" border="0" style="border-radius:10px;">
+        <tr>
+            <td align="center">
+                
+                <font face="Arial" size="6" color="#3498db">Medicita</font>
+                <br><br>
+
+                <font size="4">Iniciar Sesión</font>
+                <br><br>
+
+                <form action="dashboard.html" method="get">
+
+                    Usuario:<br>
+                    <input type="text" name="usuario" size="30" required><br><br>
+
+                    Contraseña:<br>
+                    <input type="password" name="password" size="30" required><br><br>
+
+                    Rol de Usuario:<br>
+                    <select name="rol" required>
+                        <option value="">Seleccione un rol</option>
+                        <option value="paciente">Paciente</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="secretaria">Secretaria</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                    <br><br>
+
+                    <input type="submit" value="Entrar" 
+                    style="background-color:#3498db;color:white;padding:10px 20px;border:none;cursor:pointer;">
+                </form>
+
+                <br>
+                <a href="crear-usuario.html">¿No tienes cuenta? Crear Usuario</a>
+
+            </td>
+        </tr>
+    </table>
+</center>
+
+</body>
+</html>
