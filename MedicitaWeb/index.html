@@ -64,6 +64,7 @@
         const role = result.user.rol;
         if (role === 'Administrador') window.location.href = 'pacientes.html';
         else if (role === 'Doctor') window.location.href = 'historial.html';
+        else if (role === 'Paciente') window.location.href = 'citas.html';
         else window.location.href = 'citas.html';
       });
     });

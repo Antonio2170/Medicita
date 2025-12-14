@@ -85,8 +85,8 @@
   <script>
     // Configuramos la pantalla al cargar
     document.addEventListener('DOMContentLoaded', () => {
-      // Solo Administrador y Doctor pueden acceder
-      requireAuth(['Administrador','Doctor']);
+      // Administrador, Doctor y Paciente pueden acceder (Paciente solo lectura)
+      requireAuth(['Administrador','Doctor','Paciente']);
       renderNavbar('Historial');
       // Llenamos las listas de pacientes y doctores
       populatePatientOptions('hPaciente');
@@ -95,14 +95,26 @@
       renderHistorial();
 
       // Conexión de eventos con funciones del JS
-      document.getElementById('historyForm').addEventListener('submit', handleHistSubmit);
-      document.getElementById('histTable').addEventListener('click', onHistTableClick);
+      const session = getSession();
+      if (!session || session.rol !== 'Paciente') {
+        document.getElementById('historyForm').addEventListener('submit', handleHistSubmit);
+        document.getElementById('histTable').addEventListener('click', onHistTableClick);
+        document.getElementById('cancelEdit').addEventListener('click', resetHistForm);
+      } else {
+        // Solo lectura para Paciente: ocultar formulario y acciones
+        const formSection = document.getElementById('historyForm')?.closest('section');
+        if (formSection) formSection.style.display = 'none';
+        const table = document.getElementById('histTable');
+        if (table) {
+          // Oculta columna Acciones (8va)
+          table.querySelectorAll('th:nth-child(8), td:nth-child(8)').forEach(el => el.style.display = 'none');
+        }
+      }
       document.getElementById('histSearch').addEventListener('input', renderHistorial);
       document.getElementById('clearSearch').addEventListener('click', () => {
         document.getElementById('histSearch').value='';
         renderHistorial();
       });
-      document.getElementById('cancelEdit').addEventListener('click', resetHistForm);
     });
   </script>
 </body>

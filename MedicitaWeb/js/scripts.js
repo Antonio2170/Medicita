@@ -84,6 +84,7 @@ function requireAuth(roles = null) {
     // basic guard: redirect to allowed default
     if (session.rol === 'Doctor') window.location.replace('historial.html');
     else if (session.rol === 'Recepcionista') window.location.replace('citas.html');
+    else if (session.rol === 'Paciente') window.location.replace('citas.html');
     else window.location.replace('pacientes.html');
   }
 }
@@ -97,8 +98,8 @@ function renderNavbar(active = '') {
   const links = [
     { href: 'pacientes.html', label: 'Pacientes', roles: ['Administrador','Recepcionista'] },
     { href: 'doctores.html', label: 'Doctores', roles: ['Administrador'] },
-    { href: 'citas.html', label: 'Citas', roles: ['Administrador','Recepcionista'] },
-    { href: 'historial.html', label: 'Historial', roles: ['Administrador','Doctor'] },
+    { href: 'citas.html', label: 'Citas', roles: ['Administrador','Recepcionista','Paciente'] },
+    { href: 'historial.html', label: 'Historial', roles: ['Administrador','Doctor','Paciente'] },
   ];
   const navLinks = links
     .filter(l => !session || l.roles.includes(session.rol))
@@ -352,6 +353,7 @@ function handleCitaSubmit(e) {
   const list = getCitas();
   const paciente = getPatients().find(p => p.id === pacienteId);
   const doctor = getDoctors().find(d => d.id === doctorId);
+  if (!paciente) { fb.textContent = 'Paciente inválido o no existe'; fb.classList.add('show'); return; }
   const pacienteNombre = paciente ? paciente.nombre : '';
   const doctorNombre = doctor ? doctor.nombre : '';
 
@@ -378,7 +380,9 @@ function resetCitaForm() {
 function renderCitas() {
   const tbody = document.querySelector('#citasTable tbody');
   const q = (document.getElementById('citaSearch')?.value || '').toLowerCase();
-  const list = getCitas().filter(c => c.pacienteNombre.toLowerCase().includes(q) || c.doctorNombre.toLowerCase().includes(q));
+  const session = getSession();
+  let base = getCitas();
+    const list = base.filter(c => c.pacienteNombre.toLowerCase().includes(q) || c.doctorNombre.toLowerCase().includes(q));
   tbody.innerHTML = list.map(c => `
     <tr>
       <td>${c.id}</td>
@@ -393,7 +397,7 @@ function renderCitas() {
       </td>
     </tr>
   `).join('');
-}
+  }
 
 // Maneja los botones Editar/Cancelar en la tabla de citas
 function onCitasTableClick(e) {
@@ -464,6 +468,10 @@ function renderHistorial() {
   const tbody = document.querySelector('#histTable tbody');
   const q = (document.getElementById('histSearch')?.value || '').toLowerCase();
   const list = getHistorial().filter(h => h.pacienteNombre.toLowerCase().includes(q) || h.doctorNombre.toLowerCase().includes(q));
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="muted">No hay registros de historial. Use el buscador para consultar.</td></tr>`;
+    return;
+  }
   tbody.innerHTML = list.map(h => `
     <tr>
       <td>${h.id}</td>

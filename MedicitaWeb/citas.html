@@ -84,8 +84,8 @@
   <script>
     // Configuración al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
-      // Solo Administrador y Recepcionista pueden gestionar citas
-      requireAuth(['Administrador','Recepcionista']);
+      // Administrador, Recepcionista y Paciente pueden gestionar/consultar citas
+      requireAuth(['Administrador','Recepcionista','Paciente']);
       renderNavbar('Citas');
       // Llenamos las listas desplegables con pacientes y doctores existentes
       populatePatientOptions('cPaciente');
