@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+  Archivo: historial.html
+  Propósito: Pantalla para ver y registrar el historial médico de los pacientes.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicita | Historial</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <header id="navbar"></header>
+  <main class="container">
+    <h1>Historial Médico</h1>
+
+    <!-- Formulario para agregar o editar un registro de historial -->
+    <section class="card">
+      <h2>Agregar Registro</h2>
+      <form id="historyForm" class="form grid">
+        <!-- Campo oculto para el ID cuando se edita -->
+        <input type="hidden" id="hId" />
+        <div class="form-row">
+          <label for="hPaciente">Paciente</label>
+          <select id="hPaciente" required></select>
+        </div>
+        <div class="form-row">
+          <label for="hDoctor">Doctor</label>
+          <select id="hDoctor" required></select>
+        </div>
+        <div class="form-row">
+          <label for="hFecha">Fecha</label>
+          <input id="hFecha" type="date" required />
+        </div>
+        <div class="form-row">
+          <label for="hDiagnostico">Diagnóstico</label>
+          <input id="hDiagnostico" required />
+        </div>
+        <div class="form-row">
+          <label for="hMedicamentos">Medicamentos</label>
+          <input id="hMedicamentos" />
+        </div>
+        <div class="form-row">
+          <label for="hObservaciones">Observaciones</label>
+          <textarea id="hObservaciones" rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Guardar</button>
+          <button class="btn" type="reset" id="cancelEdit">Cancelar</button>
+        </div>
+        <!-- Mensajes de error o ayuda -->
+        <div id="histFeedback" class="feedback"></div>
+      </form>
+    </section>
+
+    <!-- Lista de registros de historial con filtros de búsqueda -->
+    <section class="card">
+      <div class="toolbar">
+        <input id="histSearch" placeholder="Filtrar por paciente o doctor" />
+        <button class="btn" id="clearSearch">Limpiar</button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table" id="histTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Paciente</th>
+              <th>Doctor</th>
+              <th>Fecha</th>
+              <th>Diagnóstico</th>
+              <th>Medicamentos</th>
+              <th>Observaciones</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/scripts.js"></script>
+  <script>
+    // Configuramos la pantalla al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Solo Administrador y Doctor pueden acceder
+      requireAuth(['Administrador','Doctor']);
+      renderNavbar('Historial');
+      // Llenamos las listas de pacientes y doctores
+      populatePatientOptions('hPaciente');
+      populateDoctorOptions('hDoctor');
+      // Mostramos los registros existentes
+      renderHistorial();
+
+      // Conexión de eventos con funciones del JS
+      document.getElementById('historyForm').addEventListener('submit', handleHistSubmit);
+      document.getElementById('histTable').addEventListener('click', onHistTableClick);
+      document.getElementById('histSearch').addEventListener('input', renderHistorial);
+      document.getElementById('clearSearch').addEventListener('click', () => {
+        document.getElementById('histSearch').value='';
+        renderHistorial();
+      });
+      document.getElementById('cancelEdit').addEventListener('click', resetHistForm);
+    });
+  </script>
+</body>
+</html>

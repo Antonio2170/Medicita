@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+  Archivo: registro.html
+  Propósito: Permitir crear una cuenta de usuario con un rol para poder entrar al sistema.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicita | Registro</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-body">
+  <!-- Tarjeta con el formulario de registro -->
+  <main class="auth-card">
+    <h1 class="app-title">Medicita</h1>
+    <h2>Registro de usuario</h2>
+    <!-- Campos básicos para crear una cuenta -->
+    <form id="registerForm" class="form">
+      <div class="form-row">
+        <label for="name">Nombre completo</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-row">
+        <label for="regUser">Usuario</label>
+        <input type="text" id="regUser" name="regUser" required />
+      </div>
+      <div class="form-row">
+        <label for="regPass">Contraseña</label>
+        <input type="password" id="regPass" name="regPass" required />
+      </div>
+      <div class="form-row">
+        <label for="regPass2">Confirmar contraseña</label>
+        <input type="password" id="regPass2" name="regPass2" required />
+      </div>
+      <div class="form-row">
+        <label for="rol">Rol</label>
+        <select id="rol" name="rol" required>
+          <option value="">Seleccione...</option>
+          <option>Administrador</option>
+          <option>Doctor</option>
+          <option>Recepcionista</option>
+        </select>
+      </div>
+      <button type="submit" class="btn primary">Crear cuenta</button>
+      <p class="muted">¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a></p>
+      <div id="regFeedback" class="feedback" role="alert" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script src="js/scripts.js"></script>
+  <script>
+    // Manejamos el envío del formulario de registro
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const user = document.getElementById('regUser').value.trim();
+      const pass = document.getElementById('regPass').value;
+      const pass2 = document.getElementById('regPass2').value;
+      const rol = document.getElementById('rol').value;
+      const fb = document.getElementById('regFeedback');
+
+      // Validaciones básicas: campos completos y contraseñas iguales
+      if (!name || !user || !pass || !pass2 || !rol) {
+        fb.textContent = 'Complete todos los campos';
+        fb.classList.add('show');
+        return;
+      }
+      if (pass !== pass2) {
+        fb.textContent = 'Las contraseñas no coinciden';
+        fb.classList.add('show');
+        return;
+      }
+      // Llamamos a la función del JS que guarda el usuario en memoria local del navegador
+      const res = registerUser({ nombre: name, usuario: user, password: pass, rol });
+      if (!res.success) {
+        fb.textContent = res.message;
+        fb.classList.add('show');
+        return;
+      }
+      // Si todo va bien, se regresa a la pantalla de inicio de sesión
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

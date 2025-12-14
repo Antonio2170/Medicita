@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+  Archivo: index.html
+  Propósito: Pantalla de inicio de sesión para entrar al sistema Medicita.
+  Notas: Este archivo carga los estilos (CSS) y la lógica (JS). El formulario pide usuario y contraseña.
+-->
+<html lang="es">
+<head>
+  <!-- Metadatos básicos para que el navegador entienda el idioma y el tamaño de pantalla -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Título que aparece en la pestaña del navegador -->
+  <title>Medicita | Login</title>
+  <!-- Conecta el archivo de estilos para los colores y diseño -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-body">
+  <!-- Contenedor principal de la tarjeta de inicio de sesión -->
+  <main class="auth-card">
+    <!-- Título de la aplicación -->
+    <h1 class="app-title">Medicita</h1>
+    <h2>Inicio de sesión</h2>
+    <!-- Formulario donde el usuario escribe sus credenciales -->
+    <form id="loginForm" class="form">
+      <div class="form-row">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" required autocomplete="username" />
+      </div>
+      <div class="form-row">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+      </div>
+      <!-- Botón para enviar el formulario -->
+      <button type="submit" class="btn primary">Ingresar</button>
+      <!-- Enlace para ir a la pantalla de registro si no tiene cuenta -->
+      <p class="muted">¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+      <!-- Área donde mostramos mensajes de error si algo sale mal al iniciar sesión -->
+      <div id="loginFeedback" class="feedback" role="alert" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <!-- Cargamos la lógica general de la aplicación -->
+  <script src="js/scripts.js"></script>
+  <script>
+    // Este bloque se ejecuta cuando la página termina de cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Carga datos iniciales de ejemplo (usuarios, doctores) si es la primera vez
+      seedDefaults();
+      const form = document.getElementById('loginForm');
+      // Cuando se envía el formulario, evitamos que recargue la página y validamos
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        // Llamamos a la función de login definida en scripts.js
+        const result = login(username, password);
+        const fb = document.getElementById('loginFeedback');
+        if (!result.success) {
+          fb.textContent = result.message || 'Credenciales inválidas';
+          fb.classList.add('show');
+          return;
+        }
+        // Si el login es correcto, redirigimos según el rol del usuario
+        const role = result.user.rol;
+        if (role === 'Administrador') window.location.href = 'pacientes.html';
+        else if (role === 'Doctor') window.location.href = 'historial.html';
+        else window.location.href = 'citas.html';
+      });
+    });
+  </script>
+</body>
+</html>

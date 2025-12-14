@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+  Archivo: doctores.html
+  Propósito: Pantalla para registrar, editar, eliminar y buscar doctores.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicita | Doctores</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <header id="navbar"></header>
+  <main class="container">
+    <h1>Gestión de Doctores</h1>
+
+    <!-- Formulario para alta y edición de doctores -->
+    <section class="card">
+      <h2>Nuevo / Editar Doctor</h2>
+      <form id="doctorForm" class="form grid">
+        <!-- Campo oculto con el ID cuando se edita -->
+        <input type="hidden" id="doctorId" />
+        <div class="form-row">
+          <label for="dNombre">Nombre completo</label>
+          <input id="dNombre" required />
+        </div>
+        <div class="form-row">
+          <label for="dEspecialidad">Especialidad</label>
+          <input id="dEspecialidad" required />
+        </div>
+        <div class="form-row">
+          <label for="dTelefono">Teléfono</label>
+          <input id="dTelefono" type="tel" placeholder="9999-9999" required />
+        </div>
+        <div class="form-row">
+          <label for="dCorreo">Correo</label>
+          <input id="dCorreo" type="email" placeholder="doctor@mail.com" required />
+        </div>
+        <div class="form-row">
+          <label for="dHorario">Horario disponible</label>
+          <input id="dHorario" placeholder="L-V 9:00-17:00" required />
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Guardar</button>
+          <button class="btn" type="reset" id="cancelEdit">Cancelar</button>
+        </div>
+        <!-- Mensajes de error o ayuda -->
+        <div id="doctorFeedback" class="feedback"></div>
+      </form>
+    </section>
+
+    <!-- Listado de doctores con buscador -->
+    <section class="card">
+      <div class="toolbar">
+        <input id="doctorSearch" placeholder="Buscar por nombre o especialidad" />
+        <button class="btn" id="clearSearch">Limpiar</button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table" id="doctorsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Especialidad</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Horario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/scripts.js"></script>
+  <script>
+    // Configuramos la página al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Solo Administrador puede ver doctores
+      requireAuth(['Administrador']);
+      renderNavbar('Doctores');
+      renderDoctors();
+
+      // Conectamos los eventos de botones y formularios
+      document.getElementById('doctorForm').addEventListener('submit', handleDoctorSubmit);
+      document.getElementById('doctorsTable').addEventListener('click', onDoctorsTableClick);
+      document.getElementById('doctorSearch').addEventListener('input', renderDoctors);
+      document.getElementById('clearSearch').addEventListener('click', () => {
+        document.getElementById('doctorSearch').value='';
+        renderDoctors();
+      });
+      document.getElementById('cancelEdit').addEventListener('click', resetDoctorForm);
+    });
+  </script>
+</body>
+</html>

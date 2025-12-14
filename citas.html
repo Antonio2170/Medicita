@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+  Archivo: citas.html
+  Propósito: Pantalla para agendar, editar, cancelar y buscar citas médicas.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicita | Citas</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <header id="navbar"></header>
+  <main class="container">
+    <h1>Gestión de Citas</h1>
+
+    <!-- Formulario de alta/edición de citas -->
+    <section class="card">
+      <h2>Agendar / Editar Cita</h2>
+      <form id="appointmentForm" class="form grid">
+        <!-- Campo oculto con ID para edición -->
+        <input type="hidden" id="citaId" />
+        <div class="form-row">
+          <label for="cPaciente">Paciente</label>
+          <select id="cPaciente" required></select>
+        </div>
+        <div class="form-row">
+          <label for="cDoctor">Doctor</label>
+          <select id="cDoctor" required></select>
+        </div>
+        <div class="form-row">
+          <label for="cFecha">Fecha y hora</label>
+          <input id="cFecha" type="datetime-local" required />
+        </div>
+        <div class="form-row">
+          <label for="cMotivo">Motivo</label>
+          <input id="cMotivo" required />
+        </div>
+        <div class="form-row">
+          <label for="cEstado">Estado</label>
+          <select id="cEstado" required>
+            <option>Pendiente</option>
+            <option>Completada</option>
+            <option>Cancelada</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Guardar</button>
+          <button class="btn" type="reset" id="cancelEdit">Cancelar</button>
+        </div>
+        <!-- Mensajes de error -->
+        <div id="citaFeedback" class="feedback"></div>
+      </form>
+    </section>
+
+    <!-- Listado de citas con buscador -->
+    <section class="card">
+      <div class="toolbar">
+        <input id="citaSearch" placeholder="Buscar por paciente o doctor" />
+        <button class="btn" id="clearSearch">Limpiar</button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table" id="citasTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Paciente</th>
+              <th>Doctor</th>
+              <th>Fecha</th>
+              <th>Motivo</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/scripts.js"></script>
+  <script>
+    // Configuración al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      // Solo Administrador y Recepcionista pueden gestionar citas
+      requireAuth(['Administrador','Recepcionista']);
+      renderNavbar('Citas');
+      // Llenamos las listas desplegables con pacientes y doctores existentes
+      populatePatientOptions('cPaciente');
+      populateDoctorOptions('cDoctor');
+      // Mostramos las citas guardadas
+      renderCitas();
+
+      // Conectamos acciones con la lógica de JS
+      document.getElementById('appointmentForm').addEventListener('submit', handleCitaSubmit);
+      document.getElementById('citasTable').addEventListener('click', onCitasTableClick);
+      document.getElementById('citaSearch').addEventListener('input', renderCitas);
+      document.getElementById('clearSearch').addEventListener('click', () => {
+        document.getElementById('citaSearch').value='';
+        renderCitas();
+      });
+      document.getElementById('cancelEdit').addEventListener('click', resetCitaForm);
+    });
+  </script>
+</body>
+</html>

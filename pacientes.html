@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+  Archivo: pacientes.html
+  Propósito: Pantalla para registrar, editar, eliminar y buscar pacientes.
+  Notas: La información se guarda temporalmente en el navegador (localStorage), no en una base de datos real.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicita | Pacientes</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Barra de navegación superior: se llena con JS según el rol del usuario -->
+  <header id="navbar"></header>
+  <main class="container">
+    <h1>Gestión de Pacientes</h1>
+
+    <!-- Formulario para crear o editar un paciente -->
+    <section class="card">
+      <h2>Nuevo / Editar Paciente</h2>
+      <form id="patientForm" class="form grid">
+        <!-- Campo oculto: guarda el ID cuando estamos editando -->
+        <input type="hidden" id="patientId" />
+        <div class="form-row">
+          <label for="pNombre">Nombre completo</label>
+          <input id="pNombre" required />
+        </div>
+        <div class="form-row">
+          <label for="pEdad">Edad</label>
+          <input id="pEdad" type="number" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="pSexo">Sexo</label>
+          <select id="pSexo" required>
+            <option value="">Seleccione...</option>
+            <option>Femenino</option>
+            <option>Masculino</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="pTelefono">Teléfono</label>
+          <input id="pTelefono" type="tel" placeholder="9999-9999" required />
+        </div>
+        <div class="form-row">
+          <label for="pDireccion">Dirección</label>
+          <input id="pDireccion" required />
+        </div>
+        <div class="form-row">
+          <label for="pMedico">Médico asignado</label>
+          <select id="pMedico"></select>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Guardar</button>
+          <button class="btn" type="reset" id="cancelEdit">Cancelar</button>
+        </div>
+        <!-- Aquí aparecen mensajes cuando falta algo o hay un error -->
+        <div id="patientFeedback" class="feedback"></div>
+      </form>
+    </section>
+
+    <!-- Listado de pacientes con un cuadro de búsqueda -->
+    <section class="card">
+      <div class="toolbar">
+        <input id="patientSearch" placeholder="Buscar por nombre, ID o cédula" />
+        <button class="btn" id="clearSearch">Limpiar</button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table" id="patientsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Edad</th>
+              <th>Sexo</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Médico</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/scripts.js"></script>
+  <script>
+    // Este bloque corre al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      // Solo Administrador y Recepcionista pueden ver esta pantalla
+      requireAuth(['Administrador','Recepcionista']);
+      // Dibuja la barra de navegación con el nombre del usuario y opciones
+      renderNavbar('Pacientes');
+      // Llena el combo de médicos con los doctores existentes
+      populateDoctorOptions('pMedico');
+      // Muestra el listado de pacientes
+      renderPatients();
+
+      // Conecta los botones y formularios con las funciones del JS
+      document.getElementById('patientForm').addEventListener('submit', handlePatientSubmit);
+      document.getElementById('patientsTable').addEventListener('click', onPatientsTableClick);
+      document.getElementById('patientSearch').addEventListener('input', renderPatients);
+      document.getElementById('clearSearch').addEventListener('click', () => {
+        document.getElementById('patientSearch').value='';
+        renderPatients();
+      });
+      document.getElementById('cancelEdit').addEventListener('click', resetPatientForm);
+    });
+  </script>
+</body>
+</html>

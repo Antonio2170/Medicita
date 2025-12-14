@@ -1,0 +1,69 @@
+/*
+  Archivo: css/style.css
+  Propósito: Definir colores, tamaños, márgenes y estilos visuales reutilizables en toda la app.
+*/
+/* Medicita - Estilos base */
+:root {
+  --bg: #f7fbff;
+  --card: #ffffff;
+  --primary: #3aaed8;
+  --primary-600: #2c8db2;
+  --accent: #7bd389;
+  --text: #20303a;
+  --muted: #5d6b75;
+  --border: #e2e8f0;
+  --danger: #ef4444;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
+
+/* Layout */
+.container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+.table-wrapper { overflow-x: auto; }
+
+/* Navbar */
+.navbar { background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 8px 16px; position: sticky; top: 0; z-index: 10; }
+.navbar .brand { font-weight: 700; color: var(--primary); margin-right: 12px; }
+.navbar a { color: var(--muted); text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+.navbar a.active, .navbar a:hover { background: #eff6ff; color: var(--primary-600); }
+.navbar .spacer { flex: 1; }
+
+/* Forms */
+.form { display: grid; gap: 12px; }
+.form.grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 16px; }
+.form-row { display: grid; gap: 6px; }
+.form-row label { font-size: 14px; color: var(--muted); }
+.form-row input, .form-row select, .form-row textarea { padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; font: inherit; }
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(58,174,216,.15); }
+.form-actions { display: flex; gap: 8px; align-items: center; }
+.feedback { color: var(--danger); display:none; }
+.feedback.show { display:block; }
+
+/* Buttons */
+.btn { padding: 10px 14px; border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 8px; cursor: pointer; }
+.btn:hover { background: #f5faff; }
+.btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+.btn.primary:hover { background: var(--primary-600); }
+.btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+/* Tables */
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { border-bottom: 1px solid var(--border); padding: 10px; text-align: left; }
+.table th { color: var(--muted); font-weight: 600; }
+
+/* Auth */
+.auth-body { display: grid; place-items: center; background: linear-gradient(180deg, #f0f9ff, #f7fbff); }
+.auth-card { width: min(420px, 92%); background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(58,174,216,.12); }
+.app-title { text-align: center; margin: 0 0 8px; color: var(--primary-600); }
+.muted { color: var(--muted); font-size: 14px; }
+
+/* Toolbar */
+.toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.toolbar input { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .navbar { flex-wrap: wrap; }
+}
